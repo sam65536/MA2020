@@ -16,7 +16,6 @@ function formatItemsList(...inventory) {
       item.quantity = 0;
     }
   });
-
   return formattedList;
 }
 

@@ -4,6 +4,15 @@ const task3 = require('./task/index').task3;
 
 const stockItems = require('../inventory.json');
 
-console.log(filter('type', 'socks', ...stockItems));
-console.log(maxCost);
-console.log(task3(...stockItems));
+function boot(criteria, value, ...inventory) {
+  let filteredItems = filter(criteria, value, ...inventory);
+  console.log(filteredItems);
+  console.log(task3(...filteredItems));
+  console.log(maxCost);
+}
+
+function start() {
+  boot('type', 'socks', ...stockItems);
+}
+
+start();

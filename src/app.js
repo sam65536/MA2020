@@ -11,8 +11,4 @@ function boot(criteria, value, ...inventory) {
   console.log(maxCost);
 }
 
-function start() {
-  boot('type', 'socks', ...stockItems);
-}
-
-start();
+boot('type', 'socks', ...stockItems);

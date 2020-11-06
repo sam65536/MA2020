@@ -1,14 +1,12 @@
-const filter = require('./task/index').task1;
-const maxCost = require('./task/index').task2;
-const task3 = require('./task/index').task3;
+const { task1: filter, task2: maxCost, task3 } = require('./task');
 
 const stockItems = require('../inventory.json');
 
-function boot(criteria, value, ...inventory) {
-  let filteredItems = filter(criteria, value, ...inventory);
+function boot(criteria, value) {
+  const filteredItems = filter(criteria, value, ...stockItems);
   console.log(filteredItems);
   console.log(task3(...filteredItems));
   console.log(maxCost);
 }
 
-boot('type', 'socks', ...stockItems);
+boot('type', 'socks');

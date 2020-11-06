@@ -1,21 +1,8 @@
 function formatItemsList(...inventory) {
-  let formattedList = [];
-
-  for (let i = 0; i < inventory.length; i++) {
-    formattedList[i] = inventory[i].hasOwnProperty('priceForPair')
-      ? {
-          type: inventory[i].type,
-          color: inventory[i].color,
-          quantity: inventory[i].quantity,
-          price: inventory[i].priceForPair,
-        }
-      : inventory[i];
-  }
-  formattedList.forEach((item) => {
-    if (item.quantity === undefined) {
-      item.quantity = 0;
-    }
-  });
+  const formattedList = [];
+  const jsonItems = inventory.map(item => JSON.stringify(item).replace('priceForPair', 'price'));
+  jsonItems.forEach(item => formattedList.push(JSON.parse(item)));
+  formattedList.forEach(item => item.quantity = item.quantity || 0);
   return formattedList;
 }
 

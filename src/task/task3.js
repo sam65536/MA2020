@@ -1,5 +1,5 @@
 function formatItemsList(inventory) {
-  const formattedList = inventory.map((item) => {
+  return inventory.map((item) => {
     return {
       type: item.type,
       color: item.color,
@@ -7,7 +7,6 @@ function formatItemsList(inventory) {
       price: item.price || item.priceForPair,
     };
   });
-  return formattedList;
 }
 
 module.exports = formatItemsList;

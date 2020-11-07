@@ -1,8 +1,12 @@
-function formatItemsList(...inventory) {
-  const formattedList = [];
-  const jsonItems = inventory.map(item => JSON.stringify(item).replace('priceForPair', 'price'));
-  jsonItems.forEach(item => formattedList.push(JSON.parse(item)));
-  formattedList.forEach(item => item.quantity = item.quantity || 0);
+function formatItemsList(inventory) {
+  const formattedList = inventory.map((item) => {
+    return {
+      type: item.type,
+      color: item.color,
+      quantity: item.quantity || 0,
+      price: item.price || item.priceForPair,
+    };
+  });
   return formattedList;
 }
 

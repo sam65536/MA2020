@@ -1,7 +1,5 @@
 const format = require('./task3');
 
-const stockItems = require(`../../inventory.json`);
-
 function getMaxPriceItem(inventory) {
   const formattedList = format(inventory);
   formattedList.sort(
@@ -11,4 +9,4 @@ function getMaxPriceItem(inventory) {
   return formattedList[0];
 }
 
-module.exports = getMaxPriceItem(stockItems);
+module.exports = getMaxPriceItem;

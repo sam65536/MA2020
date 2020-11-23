@@ -7,14 +7,21 @@ const port = process.env.PORT;
 
 const server = http.createServer((req, res) => {
   if (req.url.match(/\/api\/products\/filter/) && req.method === 'GET')
-    return actions.getFilteredBy(req, res);
+    return actions.store.getFilteredBy(req, res);
   if (req.url === '/api/products/maxCost' && req.method === 'GET')
-    return actions.getMaxCost(req, res);
-  if (req.url === '/api/products/json' && req.method === 'GET') return actions.getJson(req, res);
+    return actions.store.getMaxCost(req, res);
+  if (req.url === '/api/products/json' && req.method === 'GET')
+    return actions.store.getJson(req, res);
   if (req.url === '/api/products/addStore' && req.method === 'POST')
-    return actions.createStore(req, res);
+    return actions.store.createStore(req, res);
   if (req.url === '/api/products/updateStore' && req.method === 'POST')
-    return actions.updateStore(req, res);
+    return actions.store.updateStore(req, res);
+  if (req.url === '/api/products/showDiscount/cb' && req.method === 'GET')
+    return actions.discount.getAllProductsDiscountsCB(req, res);
+  if (req.url === '/api/products/showDiscount/promise' && req.method === 'GET')
+    return actions.discount.getAllProductsDiscountsPromise(req, res);
+  if (req.url === '/api/products/showDiscount/async' && req.method === 'GET')
+    return actions.discount.getAllProductsDiscountsAsync(req, res);
   respondNotFound(req, res);
 });
 

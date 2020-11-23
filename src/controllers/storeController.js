@@ -1,8 +1,8 @@
-const { task1: filter, task2: maxCost, task3: format } = require('./task');
-const { getPostData, writeToFile } = require('./utils');
+const { task1: filter, task2: maxCost, task3: format } = require('../task');
+const { getPostData, writeToFile } = require('../utils');
 const querystring = require('querystring');
 
-store = global.store || require('../inventory.json');
+store = global.store || require('../../inventory.json');
 
 function getFilteredBy(req, res) {
   const { criteria, value } = querystring.parse(req.url.split('?').slice(1).join(''));

@@ -23,7 +23,8 @@ POST http://127.0.0.1:3000/api/products/updateStore
 Content-Type: application/json
 
 [
-  {"type":"socks", "color":"red", "quantity":10, "priceForPair":"$3"},
+  {"type":"hat", "color":"green", "quantity":3, "price":"$5"},
+  {"type":"hat", "color":"red", "quantity":1, "price":"$6"},
   {"type":"socks", "color":"blue", "priceForPair":"$6"}
 ]
 
@@ -42,3 +43,14 @@ GET http://127.0.0.1:3000/api/products/maxCost
 GET http://127.0.0.1:3000/api/products/json
 Accept: application/json
 
+###
+GET http://127.0.0.1:3000/api/products/showDiscount/cb
+Accept: application/json
+
+###
+GET http://127.0.0.1:3000/api/products/showDiscount/promise
+Accept: application/json
+
+###
+GET http://127.0.0.1:3000/api/products/showDiscount/async
+Accept: application/json

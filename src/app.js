@@ -22,13 +22,41 @@ const server = http.createServer((req, res) => {
     return actions.discount.getAllProductsDiscountsPromise(req, res);
   if (req.url === '/api/products/showDiscount/async' && req.method === 'GET')
     return actions.discount.getAllProductsDiscountsAsync(req, res);
+  if (req.url === '/api/products/store/csv' && req.method === 'PUT') {
+    return actions.uploadJson.uploadJson(req, res);
+  }
   respondNotFound(req, res);
 });
 
 server.listen(port, hostname);
 console.log(`Server has been started on port ${port}`);
+enableGracefulExit();
 
 function respondNotFound(req, res) {
   res.writeHead(404, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({ message: 'Route Not Found' }));
+}
+
+//Graceful exit
+function enableGracefulExit() {
+  const exitHandler = (error) => {
+    if (error) console.error(error);
+
+    console.log('Gracefully stopping...');
+    server.close(() => {
+      process.exit();
+    });
+  };
+
+  //Catches ctrl+c event
+  process.on('SIGINT', exitHandler);
+  process.on('SIGTERM', exitHandler);
+
+  //Catches "kill pid" (for example: nodemon restart)
+  process.on('SIGUSR1', exitHandler);
+  process.on('SIGUSR2', exitHandler);
+
+  //Catches uncaught/unhandled exceptions
+  process.on('uncaughtException', exitHandler);
+  process.on('unhandledRejection', exitHandler);
 }

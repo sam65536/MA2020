@@ -16,16 +16,20 @@ const server = http.createServer((req, res) => {
     return actions.store.createStore(req, res);
   if (req.url === '/api/products/updateStore' && req.method === 'POST')
     return actions.store.updateStore(req, res);
+
   if (req.url === '/api/products/showDiscount/cb' && req.method === 'GET')
     return actions.discount.getAllProductsDiscountsCB(req, res);
   if (req.url === '/api/products/showDiscount/promise' && req.method === 'GET')
     return actions.discount.getAllProductsDiscountsPromise(req, res);
   if (req.url === '/api/products/showDiscount/async' && req.method === 'GET')
     return actions.discount.getAllProductsDiscountsAsync(req, res);
-  if (req.url === '/api/products/store/csv' && req.method === 'PUT') {
-    return actions.uploadJson.uploadJson(req, res);
-  }
-  respondNotFound(req, res);
+
+  if (req.url === '/api/products/store/csv' && req.method === 'PUT')
+    return actions.upload.uploadJson(req, res);
+  if (req.url === '/api/products/store/uploads' && req.method === 'GET')
+    return actions.upload.getFilesList(req, res);
+  if (req.url.match(/\/api\/products\/store\/optimize/) && req.method === 'GET')
+    return actions.upload.optimize(req, res);
 });
 
 server.listen(port, hostname);

@@ -1,4 +1,8 @@
-const { uploadCsv } = require('../utils/csv-to-json');
+const { uploadCsv } = require('../utils/csvToJson');
+// const { optimizeJSON, transformStream } = require('../utils/jsonOptimizer');
+const { optimizeJSON } = require('../utils/jsonOptimizer2');
+const path = require('path');
+const fs = require('fs');
 
 async function uploadJson(request, response) {
   try {
@@ -17,6 +21,22 @@ async function uploadJson(request, response) {
   return;
 }
 
+function getFilesList(request, response) {
+  response.setHeader('Content-Type', 'application/json');
+  return response.end(JSON.stringify(
+    fs.readdirSync(path.resolve('./uploads'), { withFileTypes: true })
+    .filter(item => !item.isDirectory())
+    .map(item => item.name)));
+}
+
+function optimize(request, response) {
+  const filename = path.basename(request.url);
+  response.setHeader('Content-Type', 'application/json');
+  optimizeJSON(filename, response);
+  response.statusCode = 202;
+}
+
 module.exports = {
-  uploadJson,
+  uploadJson, getFilesList, optimize
 };
+

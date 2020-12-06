@@ -1,58 +1,86 @@
 const fs = require('fs');
 const path = require('path');
+const jsonLines = require('jsonlines');
+const { promisify } = require('util');
+const { pipeline } = require('stream');
 
-const through2 = require('through2');
-const split = require('split2');
 
-const { writeResponse } = require('./toolkit/writeOptimizeResponse');
+function openJsonInputStream (inputFilePath, response) {
 
-const transformStream = () => {
-  const resultList = [];
-  return through2.obj( (data, enc, cb) => {
-      let flag = false;
-      let value = JSON.parse(data);
-      if (resultList.length === 0) {
-        resultList.push(value);
-        flag = true;
-      } else {
-        for (let product of resultList) {
-          if (equals(product, value)) {
-            product.quantity = (Number(value.quantity) + Number(product.quantity)).toString();
-            flag = true;
-          }
+  const fileInputStream = fs.createReadStream(inputFilePath);
+  const parser = jsonLines.parse();
+
+  const parseStream = fileInputStream.pipe(parser);
+  const stringifier = jsonLines.stringify();
+
+  let jsonArray = [];
+
+  parseStream.on("data", (value) => {
+    let flag = false;
+    if (jsonArray.length === 0) {
+      jsonArray.push(value);
+      flag = true;
+    } else {
+      for (let product of jsonArray) {
+        if (equals(value, product)) {
+          product.quantity = (Number(product.quantity) + Number(value.quantity)).toString();
+          flag = true;
         }
       }
-      if (!flag) resultList.push(value);
-      cb(null, null);
-    },
-    function(cb) {
-        this.push(JSON.stringify(resultList, null, 4));
-        console.log(writeResponse(resultList));
-      cb();
-    });
-};
+    }
+    if (!flag) {
+      jsonArray.push(value);
+    }
+  });
 
-function optimizeJSON(filename) {
-
-  const inputFilePath = path.resolve('./uploads/', filename);
-  const outputFilePath = path.resolve('./uploads/optimized/', filename);
-
-  const readStream = fs.createReadStream(inputFilePath);
-  const writeStream = fs.createWriteStream(outputFilePath);
-
-  readStream
-    .pipe(split())
-    .pipe(transformStream)
-    .pipe(writeStream)
+  parseStream.on("end", () => {
+    jsonArray.forEach(json => {
+      stringifier.write(json);
+    })
+    response.write('successfully optimized!\n');
+    response.end(writeResponse(jsonArray));
+  });
+  return stringifier;
 }
 
 function equals(product1, product2) {
   return (product1.type === product2.type) && (product1.color === product2.color) && (product1.price === product2.price);
 }
 
-module.exports = {
-  transformStream,
-  optimizeJSON,
+function writeResponse(productList) {
+  const result = {};
+  let key = productList[0].type;
+  result[key] = productList[0].quantity;
+  for (let i=1; i<productList.length; i++) {
+    key = productList[i].type;
+    if (result[key]) {
+      result[key] = Number(result[key]) + Number(productList[i].quantity);
+    }
+    else {
+      result[key] = Number(productList[i].quantity);
+    }
+  }
+  return JSON.stringify(result, null, 4);
 }
 
-// optimizeJSON('7b62cdec-6a81-43a8-917e-b5698baf531b.json');
+async function optimizeJSON(filename, response) {
+
+  const inputFilePath = path.resolve('./uploads/', filename);
+  const outputFilePath = path.resolve('./uploads/optimized/', filename);
+
+  const parseStream = openJsonInputStream(inputFilePath, response);
+  const writeStream = fs.createWriteStream(outputFilePath);
+  const promisifiedPipeline = promisify(pipeline);
+
+  try {
+    await promisifiedPipeline(
+      parseStream,
+      writeStream);
+  } catch (err) {
+    console.error('JSON pipeline failed', err);
+  }
+}
+
+module.exports = {
+  optimizeJSON,
+}

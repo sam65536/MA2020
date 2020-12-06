@@ -3,9 +3,9 @@ const { Transform, pipeline } = require('stream');
 const { createGunzip } = require('zlib');
 const { promisify } = require('util');
 const papaparse = require('papaparse');
-const { openJsonOutputStream } = require('./toolkit/openJsonOutputStream')
 
 const { v4: uuid } = require('uuid');
+const { openJsonOutputStream } = require('./toolkit/openJsonOutputStream')
 
 function openCsvTransformStream(inputStream) {
 

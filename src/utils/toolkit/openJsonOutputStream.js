@@ -3,7 +3,6 @@ const { Writable } = require('stream');
 
 function openJsonOutputStream(fileOutputPath) {
   const fileOutputStream = fs.createWriteStream(fileOutputPath);
-  const { writeResponse } = require('./writeOptimizeResponse');
 
   let numRecords = 0;
 
@@ -22,7 +21,7 @@ function openJsonOutputStream(fileOutputPath) {
     callback();
   };
 
-  jsonOutputStream.on("finish", () => { // When the CSV stream is finished, close the output file stream.
+  jsonOutputStream.on("finish", () => {
     // fileOutputStream.write("]");
     fileOutputStream.end();
   });

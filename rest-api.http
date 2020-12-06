@@ -59,4 +59,4 @@ Accept: application/json
 GET http://127.0.0.1:3000/api/products/store/upload
 
 ###
-GET http://127.0.0.1:3000/api/products/store/optimize/2ff6a5ff-b50b-4773-90ed-bcc57f12a7b6.json
+GET http://127.0.0.1:3000/api/products/store/optimize/b0cb4c8f-d02f-440f-8a05-4fe806073fef.json

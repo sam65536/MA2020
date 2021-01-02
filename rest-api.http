@@ -54,3 +54,9 @@ Accept: application/json
 ###
 GET http://127.0.0.1:3000/api/products/showDiscount/async
 Accept: application/json
+
+###
+GET http://127.0.0.1:3000/api/products/store/upload
+
+###
+GET http://127.0.0.1:3000/api/products/store/optimize/b0cb4c8f-d02f-440f-8a05-4fe806073fef.json

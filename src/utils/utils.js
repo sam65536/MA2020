@@ -20,7 +20,7 @@ function getPostData(req) {
 
 function writeToFile(content) {
   return new Promise((resolve) => {
-    let data = require('../inventory.json');
+    let data = require('../../inventory.json');
     data.splice(0, data.length);
     content.forEach((item) => {
       data.push(item);
